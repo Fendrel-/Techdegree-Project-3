@@ -1,53 +1,29 @@
 import os
 
-import menu
+import classes
 
 
-def telepathy():
-    pass
-
-def clear():
-    os.system('cls' if os.name=='nt' else 'clear')
-
-def add_item():
-    pass
-
-def search_menu():
-    clear()
-    menu_screen = menu.Menu('Search Menu', 'Search By Telepathy')
-    return menu_screen.prompt()
-
-def add_menu():
-    clear()
-    menu_screen = menu.Menu('Add New Entry', 'New')
-    return menu_screen.prompt()
+def add_entry():
+    menu = classes.Add('Add New Entry')
+    task_name = input(' What is the task name? ')
+    time_spent = input(' How many minutes were spent on this task? ')
+    print('-----------(Optional)-----------')
+    notes = input('Enter additional notes, otherwise press enter. ')
 
 def top_menu():
-    clear()
-    menu_screen = menu.Menu('Main Menu', 'Add New Entry', 'Lookup Entry')
-    return menu_screen.prompt()
-
-def navigation():
-    current_menu = "main"
-    user_input = top_menu()
+    menu = classes.Menu('Main Menu', 'Add New Entry', 'Search Entries')
+    menu_choice = menu.prompt()
     while True:
-        if current_menu == "main":
-            if user_input == "1":
-                current_menu = "add"
-                continue
-            elif user_input == "2":
-                current_menu = "search"
-                continue
+        if menu_choice == "1":
+            add_entry()
+        elif menu_choice == "3":
+            os.system('cls')
+            quit()
+        else:
+            menu = classes.Menu('Main Menu', 'Add New Entry', 'Search Entries')
+            print("\nI'm sorry, that's not a valid option.\n")
+            menu_choice = menu.prompt()
 
-        elif current_menu == "add":
-            user_input = add_menu()
-            if user_input == "1":
-                add_item()
-
-        elif current_menu == "search":
-            user_input = search_menu()
-            if user_input == "1":
-                telepathy()
 
 if __name__ == "__main__":
-    navigation()
+    top_menu()
