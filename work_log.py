@@ -1,4 +1,6 @@
 import os
+import csv
+import pprint
 
 import classes
 
@@ -40,6 +42,13 @@ def display_entries():
     status_message = None
     while True:
         header('All Entries')
+        print('')
+        with open('tasks.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            col_width = max(len(item) for row in reader for item in row) + 2
+            for row in reader:
+                print(''.join(word.ljust(col_width)))
+
         classes.Menu(
             status_message)
         menu_choice = menu_prompt()
@@ -96,9 +105,9 @@ don\'t\n bend the spoon, that\'s impossible!\
 
 # Display the top-level menu on program start.
 def top_menu():
-    status_message = None
+    status_message = 'Main Menu'
     while True:
-        header('Main Menu')
+        header('Work Log')
         classes.MainMenu(
             status_message,
             'Add New Entry',
