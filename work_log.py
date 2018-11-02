@@ -18,17 +18,17 @@ def header(heading):
 def menu_prompt():
     return input('\n Choose an option: ')
 
-def search():
-    menu = None
+def search_menu():
+    status_message = None
     while True:
-        if not menu:
-            menu = classes.Menu('Search Tasks', '', "Find By Date", "Find By Time Spent", "Find By Exact Name", "Find By Pattern", "Find By Telekinesis")
-        menu_choice = menu.prompt()
+        header('Search Entries')
+        classes.Menu(status_message, "Find By Date", "Find By Time Spent", "Find By Exact Name", "Find By Pattern", "Find By Telekinesis")
+        menu_choice = menu_prompt()
         if menu_choice == "4":
             find_by_pattern()
             menu = None
         if menu_choice == "5":
-            menu = classes.Menu('Search Tasks', 'Nah, I\'m just kidding, you can\'t\n bend the spoon that\'s impossible!\n\n Achievement unlocked\n 250G - Neo != The One', "Find By Date", "Find By Time Spent", "Find By Exact Name", "Find By Pattern", "Find By Telepathy")
+            status_message = 'Nah, I\'m just kidding, don\'t\n bend the spoon, that\'s impossible!\n\n Achievement unlocked\n 250G - Neo != The One'
         if menu_choice == "6":
             clear()
         elif menu_choice == "7":
@@ -53,7 +53,7 @@ def top_menu():
         if menu_choice == "1":
             status_message = add_entry()
         elif menu_choice == "2":
-            search()
+            status_message = search_menu()
         elif menu_choice == "3":
             clear()
             quit()
