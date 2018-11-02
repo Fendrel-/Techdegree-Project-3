@@ -1,22 +1,28 @@
 import os
 
-class Menu(list):
-    def __init__(self, name=None, *args, **kwargs):
-        os.system('cls')
+
+class Header():
+    def __init(self, name):
         self.name = name
-        for item in args:
-            self.append(item)
         print('-' * 35)
         print(' ' + self.name)
         print('-' * 35)
 
-    def prompt(self):
+class Menu(list):
+    def __init__(self, message, *args, **kwargs):
+        for item in args:
+            self.append(item)
+        if message:
+            print('\n ' + message)
+        print('')
         for count,item in enumerate(self, start=1):
-            print('[{}] {}'.format(count, item))
+            print(' [{}] {}'.format(count, item))
+        print('')
+        self.count = count
 
-        print('[{}] Quit'.format(count+1))
-        choice = input('\nChoose an option: ')
-        return choice
 
-class Add(Menu):
-    pass
+class MainMenu(Menu):
+    def __init__(self, message, *args, **kwargs):
+        super().__init__(message, *args, **kwargs)
+        self.count += 1
+        print(' [{}] Quit'.format(self.count))
