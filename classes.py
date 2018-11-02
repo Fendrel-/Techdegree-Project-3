@@ -1,4 +1,5 @@
-import os
+import datetime
+import pytz
 
 
 class Menu(list):
@@ -11,7 +12,10 @@ class Menu(list):
         for count,item in enumerate(self, start=1):
             print(' [{}] {}'.format(count, item))
         print('')
-        count += 1
+        try:
+            count += 1
+        except:
+            count = 1
         print(' [{}] Main Menu'.format(count))
         count += 1
         print(' [{}] Quit'.format(count))
@@ -29,3 +33,14 @@ class MainMenu(Menu):
         print('')
         count += 1
         print(' [{}] Quit'.format(count))
+
+class Task():
+    def __init__(self, name, minutes, notes):
+        self.name = name
+        self.minutes = minutes
+        self.notes = notes
+
+    def write_to_file(self):
+        today = datetime.date.today().strftime('%m/%d/%Y')
+        with open('tasks.csv', 'a') as csvfile:
+            csvfile.write(today + ', ' + self.name + ', ' + self.minutes + ', '  + self.notes + '\n')
