@@ -44,7 +44,7 @@ def display_entries():
     status_message = None
     while True:
         col1_width = 13
-        col2_width = 25
+        col2_width = 26
         col3_width = 10
         header('All Entries')
         print('\n Date Added' + ' ' * (col1_width - 10), end="")
