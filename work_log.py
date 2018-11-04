@@ -43,19 +43,25 @@ def menu_prompt():
 def display_entries():
     status_message = None
     while True:
-        col1_width = 13
-        col2_width = 26
-        col3_width = 10
+        # Need to calculate column widths to make sure 
+        with open('tasks.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            col1_width = 13
+            col2_width = max([len(row[1]) for row in reader]) + 2
+            col3_width = 10
+        with open('tasks.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            col4_width = max([len(row[3]) for row in reader])
         header('All Entries')
         print('\n Date Added' + ' ' * (col1_width - 10), end="")
         print('Task' + ' ' * (col2_width - 4), end="")
         print('Minutes' + ' ' * (col3_width - 7), end="")
         print('Notes', end="")
         print('\n ', end="")
-        print('-' * 70)
+        print('-' * (col1_width + col2_width + col3_width + col4_width))
+
         with open('tasks.csv', newline='') as csvfile:
             reader = csv.reader(csvfile)
-
             for row in reader:
                 print(' ' + row[0] + ' ' * (col1_width - len(row[0])), end="")
                 print(row[1] + ' ' * (col2_width - len(row[1])), end="")
