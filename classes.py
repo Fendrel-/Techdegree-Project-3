@@ -1,6 +1,3 @@
-import datetime
-
-
 class Menu(list):
     def __init__(self, message, *args, **kwargs):
         for item in args:
@@ -35,12 +32,12 @@ class MainMenu(Menu):
 
 
 class Task():
-    def __init__(self, name, minutes, notes):
+    def __init__(self, task_date, name, minutes, notes):
+        self.task_date = task_date
         self.name = name
         self.minutes = minutes
         self.notes = notes
 
     def write_to_file(self):
-        today = datetime.date.today().strftime('%m/%d/%Y')
         with open('tasks.csv', 'a') as csvfile:
-            csvfile.write(today + ',' + self.name + ',' + self.minutes + ',' + self.notes + '\n')
+            csvfile.write(self.task_date + ',' + self.name + ',' + self.minutes + ',' + self.notes + '\n')

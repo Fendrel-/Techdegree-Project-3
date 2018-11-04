@@ -1,5 +1,6 @@
 import os
 import csv
+import datetime
 
 import classes
 
@@ -43,31 +44,36 @@ def menu_prompt():
 def display_entries():
     status_message = None
     while True:
-        # Need to calculate column widths to make sure 
-        with open('tasks.csv', newline='') as csvfile:
-            reader = csv.reader(csvfile)
-            col1_width = 13
-            col2_width = max([len(row[1]) for row in reader]) + 2
-            col3_width = 10
-        with open('tasks.csv', newline='') as csvfile:
-            reader = csv.reader(csvfile)
-            col4_width = max([len(row[3]) for row in reader])
-        header('All Entries')
-        print('\n Date Added' + ' ' * (col1_width - 10), end="")
-        print('Task' + ' ' * (col2_width - 4), end="")
-        print('Minutes' + ' ' * (col3_width - 7), end="")
-        print('Notes', end="")
-        print('\n ', end="")
-        print('-' * (col1_width + col2_width + col3_width + col4_width))
+        # Need to calculate column widths to make sure
+        try:
+            with open('tasks.csv', newline='') as csvfile:
+                reader = csv.reader(csvfile)
+                col1_width = 13
+                col2_width = max([len(row[1]) for row in reader]) + 3
+                col3_width = 10
+            with open('tasks.csv', newline='') as csvfile:
+                reader = csv.reader(csvfile)
+                col4_width = max([len(row[3]) for row in reader])
+            status_message = None
+            header('All Entries')
+            print('\n Date Added' + ' ' * (col1_width - 10), end="")
+            print('Task' + ' ' * (col2_width - 4), end="")
+            print('Minutes' + ' ' * (col3_width - 7), end="")
+            print('Notes', end="")
+            print('\n ', end="")
+            print('-' * (col1_width + col2_width + col3_width + col4_width))
 
-        with open('tasks.csv', newline='') as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader:
-                print(' ' + row[0] + ' ' * (col1_width - len(row[0])), end="")
-                print(row[1] + ' ' * (col2_width - len(row[1])), end="")
-                print(row[2] + ' ' * (col3_width - len(row[2])), end="")
-                print(row[3])
-
+            with open('tasks.csv', newline='') as csvfile:
+                reader = csv.reader(csvfile)
+                for row in reader:
+                    print(' ' + row[0] + ' ' * (col1_width - len(row[0])), end="")
+                    print(row[1] + ' ' * (col2_width - len(row[1])), end="")
+                    print(row[2] + ' ' * (col3_width - len(row[2])), end="")
+                    print(row[3])
+        except IndexError:
+            clear()
+            header('All Entries')
+            status_message = 'Nothing to display!'
         classes.Menu(
             status_message)
         menu_choice = menu_prompt()
@@ -81,8 +87,10 @@ def display_entries():
 # Run the 'add entry' function if user selects it from the main menu.
 def add_entry():
     header('Add a Task')
-    task_name = input('\n What is the task name? ')
-    while len(task_name) > 20:
+    task_date = datetime.datetime.strptime(input('\n Enter task date as MM/DD/YYYY '), '%m/%d/%Y')
+    task_date = task_date.strftime('%m/%d/%Y')
+    task_name = input(' What is the task name? ')
+    while len(task_name) > 40:
         clear()
         header('Add a Task')
         task_name = input('\n I\'m sorry your task name is too long. Try again. ')
@@ -93,7 +101,7 @@ def add_entry():
         time_spent = input(' Minutes spent must be less than 100. Try again. ')
     print('-----------(Optional)-----------')
     notes = input(' Enter any notes. ')
-    task = classes.Task(task_name, time_spent, notes)
+    task = classes.Task(task_date, task_name, time_spent, notes)
     task.write_to_file()
     clear()
     return "New Entry Added Successfully!"
