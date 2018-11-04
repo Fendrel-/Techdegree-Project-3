@@ -51,29 +51,27 @@ def display_entries():
                 col1_width = 13
                 col2_width = max([len(row[1]) for row in reader]) + 3
                 col3_width = 10
-            with open('tasks.csv', newline='') as csvfile:
-                reader = csv.reader(csvfile)
+                csvfile.seek(0)
                 col4_width = max([len(row[3]) for row in reader])
-            status_message = None
-            header('All Entries')
-            print('\n Date Added' + ' ' * (col1_width - 10), end="")
-            print('Task' + ' ' * (col2_width - 4), end="")
-            print('Minutes' + ' ' * (col3_width - 7), end="")
-            print('Notes', end="")
-            print('\n ', end="")
-            print('-' * (col1_width + col2_width + col3_width + col4_width))
+                status_message = None
+                header('All Entries')
+                print('\n Date Added' + ' ' * (col1_width - 10), end="")
+                print('Task' + ' ' * (col2_width - 4), end="")
+                print('Minutes' + ' ' * (col3_width - 7), end="")
+                print('Notes', end="")
+                print('\n ', end="")
+                print('-' * (col1_width + col2_width + col3_width + col4_width))
 
-            with open('tasks.csv', newline='') as csvfile:
-                reader = csv.reader(csvfile)
+                csvfile.seek(0)
                 for row in reader:
                     print(' ' + row[0] + ' ' * (col1_width - len(row[0])), end="")
                     print(row[1] + ' ' * (col2_width - len(row[1])), end="")
                     print(row[2] + ' ' * (col3_width - len(row[2])), end="")
                     print(row[3])
-        except IndexError:
+        except (IndexError, ValueError):
             clear()
             header('All Entries')
-            status_message = 'Nothing to display!'
+            status_message = 'You don\'t have any tasks added yet!'
         classes.Menu(
             status_message)
         menu_choice = menu_prompt()
@@ -104,7 +102,7 @@ def add_entry():
     task = classes.Task(task_date, task_name, time_spent, notes)
     task.write_to_file()
     clear()
-    return "New Entry Added Successfully!"
+    return "New was added successfully!"
 
 # Run the search menu if user selects it from the main menu.
 def search_menu():
