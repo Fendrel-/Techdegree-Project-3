@@ -69,7 +69,7 @@ def find_by_exact():
 def find_by_pattern():
     status_message = None
     header('Find by Pattern')
-    regex_search = input(' Enter a regex pattern to search. ')
+    regex_search = input('\n Enter a regex pattern to search. ')
     classes.DisplayEntries('tasks.csv').FindByPattern(regex_search)
     while True:
         menu_options = ['Return to Search']
@@ -133,7 +133,7 @@ def add_entry():
     task = classes.Task(task_date, task_name, time_spent, notes)
     task.write_to_file()
     clear()
-    return "New was added successfully!"
+    return "New entry was added successfully!"
 
 # Run the search menu if user selects it from the main menu.
 def search_menu():

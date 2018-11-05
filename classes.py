@@ -58,7 +58,7 @@ class DisplayEntries():
                 col3_width = 10
                 csvfile.seek(0)
                 col4_width = max([len(row[3]) for row in reader])
-                print('\n     Date' + ' ' * (col1_width - 10), end="")
+                print('\n     Date' + ' ' * (col1_width - 4), end="")
                 print('Task' + ' ' * (col2_width - 4), end="")
                 print('Minutes' + ' ' * (col3_width - 7), end="")
                 print('Notes', end="")
