@@ -1,6 +1,6 @@
 import os
-import csv
 import datetime
+import re
 
 import classes
 
@@ -8,15 +8,45 @@ import classes
 def clear():
     os.system("cls" if os.name == "nt" else "clear")
 
+def display_menu(status_message, menu_options, is_main_menu):
+    if is_main_menu:
+        classes.MainMenu(status_message, menu_options)
+    else:
+        classes.Menu(status_message, menu_options)
+    return menu_prompt()
+
 # Run the 'find  by date' function if user selects it from the main menu.
 def find_by_date():
+    fmt = '%m/%d/%Y'
     header('Find by Date')
-    input(' This is a placeholder for a function. (Press enter)')
+    date_search = datetime.datetime.strptime(input('\n Enter a date with format MM/DD/YYYY '), '%m/%d/%Y')
+    status_message = None
+    classes.DisplayEntries('tasks.csv').FindByDate(date_search)
+    menu_options = ['Return to Search']
+    menu_choice = display_menu(status_message, menu_options, False)
+    if menu_choice == 1:
+        search_menu()
+    elif menu_choice == 2:
+        top_menu()
+    elif menu_choice == 3:
+        clear()
+        quit()
 
 # Run the 'find by time spent' function if user selects it from the search menu.
 def find_by_time():
     header('Find by Time')
-    input(' This is a placeholder for a function. (Press enter)')
+    time_search = input('\n Enter a number of minutes to search for ')
+    status_message = None
+    classes.DisplayEntries('tasks.csv').FindByTime(time_search)
+    menu_options = ['Return to Search']
+    menu_choice = display_menu(status_message, menu_options, False)
+    if menu_choice == 1:
+        search_menu()
+    elif menu_choice == 2:
+        top_menu()
+    elif menu_choice == 3:
+        clear()
+        quit()
 
 # Run the 'find by exact match' function if user selects it from the search menu.
 def find_by_exact():
@@ -24,9 +54,9 @@ def find_by_exact():
     input(' This is a placeholder for a function. (Press enter)')
 
 # Run the 'find by pattern' function if user selects it from the search menu.
-def find_by_pattern():
+def find_by_regex_pattern():
     header('Find by Pattern')
-    input(' This is a placeholder for a function. (Press enter)')
+    input(' Enter a regex pattern')
 
 # Display the heading with the title of the menu before the
 # menu options are displayed to the user.
@@ -44,37 +74,12 @@ def menu_prompt():
 def display_entries():
     status_message = None
     while True:
-        # Need to calculate column widths to make sure
-        try:
-            with open('tasks.csv', newline='') as csvfile:
-                reader = csv.reader(csvfile)
-                col1_width = 13
-                col2_width = max([len(row[1]) for row in reader]) + 3
-                col3_width = 10
-                csvfile.seek(0)
-                col4_width = max([len(row[3]) for row in reader])
-                status_message = None
-                header('All Entries')
-                print('\n Date Added' + ' ' * (col1_width - 10), end="")
-                print('Task' + ' ' * (col2_width - 4), end="")
-                print('Minutes' + ' ' * (col3_width - 7), end="")
-                print('Notes', end="")
-                print('\n ', end="")
-                print('-' * (col1_width + col2_width + col3_width + col4_width))
-
-                csvfile.seek(0)
-                for row in reader:
-                    print(' ' + row[0] + ' ' * (col1_width - len(row[0])), end="")
-                    print(row[1] + ' ' * (col2_width - len(row[1])), end="")
-                    print(row[2] + ' ' * (col3_width - len(row[2])), end="")
-                    print(row[3])
-        except (IndexError, ValueError):
-            clear()
-            header('All Entries')
-            status_message = 'You don\'t have any tasks added yet!'
-        classes.Menu(
-            status_message)
-        menu_choice = menu_prompt()
+        header('All Entries')
+        has_entries = classes.DisplayEntries('tasks.csv').ShowAll()
+        if not has_entries:
+            status_message = 'You don\'t have any entries yet!'
+        menu_options = []
+        menu_choice = display_menu(status_message, menu_options, False)
         if menu_choice == "1":
             clear()
             break
@@ -109,13 +114,11 @@ def search_menu():
     status_message = None
     while True:
         header('Search Entries')
-        classes.Menu(
+        menu_options = ['Find By Date', 'Find By Time Spent', 'Find By Exact Name', 'Find By Regex Pattern']
+        menu_choice = display_menu(
             status_message,
-            "Find By Date",
-            "Find By Time Spent",
-            "Find By Exact Name",
-            "Find By Pattern",)
-        menu_choice = menu_prompt()
+            menu_options,
+            False)
         if menu_choice == "1":
             find_by_date()
         if menu_choice == "2":
@@ -135,12 +138,11 @@ def search_menu():
 def top_menu(status_message):
     while True:
         header('Work Log')
-        classes.MainMenu(
+        menu_options = ['Add New Entry', 'Show All Entries', 'Search Entries']
+        menu_choice = display_menu(
             status_message,
-            'Add New Entry',
-            'Show All Entries',
-            'Search Entries')
-        menu_choice = menu_prompt()
+            menu_options,
+            True)
         if menu_choice == "1":
             status_message = add_entry()
             continue
