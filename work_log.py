@@ -5,9 +5,11 @@ import re
 
 import classes
 
+
 # Clears the console screen when function is called between menu changes.
 def clear():
     os.system("cls" if os.name == "nt" else "clear")
+
 
 def display_menu(status_message, menu_options, is_main_menu):
     if is_main_menu:
@@ -16,22 +18,28 @@ def display_menu(status_message, menu_options, is_main_menu):
         classes.Menu(status_message, menu_options)
     return menu_prompt()
 
+
 # Run the 'find  by date' function if user selects it from the main menu.
 def find_by_date():
     fmt = '%m/%d/%Y'
+    status_message = None
     header('Find by Date')
     date_search = datetime.datetime.strptime(input('\n Enter a date with format MM/DD/YYYY '), '%m/%d/%Y')
-    status_message = None
     classes.DisplayEntries('tasks.csv').FindByDate(date_search)
-    menu_options = ['Return to Search']
-    menu_choice = display_menu(status_message, menu_options, False)
-    if menu_choice == '1':
-        return 'search'
-    elif menu_choice == '2':
-        return 'main'
-    elif menu_choice == '3':
-        clear()
-        quit()
+    while True:
+        menu_options = ['Return to Search']
+        menu_choice = display_menu(status_message, menu_options, False)
+        if menu_choice == '1':
+            return 'search'
+        elif menu_choice == '2':
+            return 'main'
+        elif menu_choice == '3':
+            clear()
+            quit()
+        else:
+            status_message = 'I\'m sorry that\'s not a valid option'
+            header('Find by Date')
+
 
 # Run the 'find by time spent' function if user selects it from the search menu.
 def find_by_time():
@@ -39,15 +47,20 @@ def find_by_time():
     time_search = input('\n Enter a number of minutes to search for ')
     status_message = None
     classes.DisplayEntries('tasks.csv').FindByTime(time_search)
-    menu_options = ['Return to Search']
-    menu_choice = display_menu(status_message, menu_options, False)
-    if menu_choice == '1':
-        return 'search'
-    elif menu_choice == '2':
-        return 'main'
-    elif menu_choice == '3':
-        clear()
-        quit()
+    while True:
+        menu_options = ['Return to Search']
+        menu_choice = display_menu(status_message, menu_options, False)
+        if menu_choice == '1':
+            return 'search'
+        elif menu_choice == '2':
+            return 'main'
+        elif menu_choice == '3':
+            clear()
+            quit()
+        else:
+            status_message = 'I\'m sorry that\'s not a valid option'
+            header('Find by Time')
+
 
 # Run the 'find by exact match' function if user selects it from the search menu.
 def find_by_exact():
@@ -64,6 +77,7 @@ def find_by_exact():
     elif menu_choice == '3':
         clear()
         quit()
+
 
 # Run the 'find by pattern' function if user selects it from the search menu.
 def find_by_pattern():
@@ -84,6 +98,7 @@ def find_by_pattern():
         else:
             status_message = 'I\'m sorry that\'s not a valid option'
 
+
 # Display the heading with the title of the menu before the
 # menu options are displayed to the user.
 def header(heading):
@@ -92,9 +107,11 @@ def header(heading):
     print(' ' + heading)
     print('-' * 35)
 
+
 # Prompt the user for a menu option.
 def menu_prompt():
     return input('\n Choose an option: ')
+
 
 # Run the 'display entries' function if user selects it from the main menu.
 def display_entries():
@@ -107,11 +124,13 @@ def display_entries():
         menu_options = []
         menu_choice = display_menu(status_message, menu_options, False)
         if menu_choice == "1":
-            clear()
             break
         elif menu_choice == "2":
             clear()
             quit()
+        else:
+            status_message = '\n I\'m sorry that\'s not a valid option'
+
 
 # Run the 'add entry' function if user selects it from the main menu.
 def add_entry():
@@ -120,12 +139,10 @@ def add_entry():
     task_date = task_date.strftime('%m/%d/%Y')
     task_name = input(' What is the task name? ')
     while len(task_name) > 40:
-        clear()
         header('Add a Task')
         task_name = input('\n I\'m sorry your task name is too long. Try again. ')
     time_spent = input(' How many minutes were spent on this task? ')
     while int(time_spent) not in range(100):
-        clear()
         header('Add a Task')
         time_spent = input(' Minutes spent must be less than 100. Try again. ')
     print('-----------(Optional)-----------')
@@ -134,6 +151,7 @@ def add_entry():
     task.write_to_file()
     clear()
     return "New entry was added successfully!"
+
 
 # Run the search menu if user selects it from the main menu.
 def search_menu():
@@ -146,6 +164,7 @@ def search_menu():
             menu_options,
             False)
         if menu_choice == "1":
+            clear()
             flow_control = find_by_date()
             if flow_control == 'search':
                 continue
@@ -177,6 +196,7 @@ def search_menu():
             quit()
         else:
             status_message = 'I\'m sorry that\'s not a valid option'
+
 
 # Display the top-level menu on program start.
 def top_menu(status_message):
