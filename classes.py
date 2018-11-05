@@ -43,7 +43,8 @@ class Task():
 
     def write_to_file(self):
         with open('tasks.csv', 'a') as csvfile:
-            csvfile.write(self.task_date + ',' + self.name + ',' + self.minutes + ',' + self.notes + '\n')
+            csvfile.write(
+                self.task_date+','+self.name+','+self.minutes+','+self.notes+'\n')
 
 
 class DisplayEntries():
@@ -199,7 +200,6 @@ class DisplayEntries():
                 print('-' * (col1_width + col2_width + col3_width + col4_width + 4))
                 csvfile.seek(0)
                 count = 0
-                regex_search = re.compile(regex_search)
                 for row in reader:
                     for item in row:
                         if regex_search.fullmatch(item):

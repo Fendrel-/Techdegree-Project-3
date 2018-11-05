@@ -83,8 +83,14 @@ def find_by_exact():
 def find_by_pattern():
     status_message = None
     header('Find by Pattern')
-    regex_search = input('\n Enter a regex pattern to search. ')
-    classes.DisplayEntries('tasks.csv').FindByPattern(regex_search)
+    while True:
+        regex_search = input('\n Enter a regex pattern to search. ')
+        try:
+            classes.DisplayEntries('tasks.csv').FindByPattern(regex_search)
+            continue
+        except:
+            pass
+
     while True:
         menu_options = ['Return to Search']
         menu_choice = display_menu(status_message, menu_options, False)
