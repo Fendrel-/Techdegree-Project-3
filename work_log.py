@@ -1,5 +1,5 @@
-import os
 import datetime
+import os
 import re
 
 import classes
@@ -51,12 +51,37 @@ def find_by_time():
 # Run the 'find by exact match' function if user selects it from the search menu.
 def find_by_exact():
     header('Find by Exact Name')
-    input(' This is a placeholder for a function. (Press enter)')
+    exact_search = input('\n Enter the task name to search for. ').lower()
+    status_message = None
+    classes.DisplayEntries('tasks.csv').FindByExact(exact_search)
+    menu_options = ['Return to Search']
+    menu_choice = display_menu(status_message, menu_options, False)
+    if menu_choice == 1:
+        search_menu()
+    elif menu_choice == 2:
+        top_menu()
+    elif menu_choice == 3:
+        clear()
+        quit()
 
 # Run the 'find by pattern' function if user selects it from the search menu.
-def find_by_regex_pattern():
+def find_by_pattern():
+    status_message = None
     header('Find by Pattern')
-    input(' Enter a regex pattern')
+    regex_search = input(' Enter a regex pattern to search. ')
+    classes.DisplayEntries('tasks.csv').FindByPattern(regex_search)
+    while True:
+        menu_options = ['Return to Search']
+        menu_choice = display_menu(status_message, menu_options, False)
+        if menu_choice == 1:
+            break
+        elif menu_choice == 2:
+            top_menu()
+        elif menu_choice == 3:
+            clear()
+            quit()
+        else:
+            status_message = 'I\'m sorry that\'s not a valid option'
 
 # Display the heading with the title of the menu before the
 # menu options are displayed to the user.
@@ -133,6 +158,8 @@ def search_menu():
         elif menu_choice == "6":
             clear()
             quit()
+        else:
+            status_message = 'I\'m sorry that\'s not a valid option'
 
 # Display the top-level menu on program start.
 def top_menu(status_message):
