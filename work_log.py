@@ -1,3 +1,4 @@
+import pdb
 import datetime
 import os
 import re
@@ -73,11 +74,11 @@ def find_by_pattern():
     while True:
         menu_options = ['Return to Search']
         menu_choice = display_menu(status_message, menu_options, False)
-        if menu_choice == 1:
-            break
-        elif menu_choice == 2:
-            top_menu()
-        elif menu_choice == 3:
+        if menu_choice == '1':
+            return 'search'
+        elif menu_choice == '2':
+            return 'main'
+        elif menu_choice == '3':
             clear()
             quit()
         else:
@@ -145,13 +146,29 @@ def search_menu():
             menu_options,
             False)
         if menu_choice == "1":
-            find_by_date()
+            flow_control = find_by_date()
+            if flow_control == 'search':
+                continue
+            else:
+                break
         if menu_choice == "2":
-            find_by_time()
+            flow_control = find_by_time()
+            if flow_control == 'search':
+                continue
+            else:
+                break
         if menu_choice == "3":
-            find_by_exact()
+            flow_control = find_by_exact()
+            if flow_control == 'search':
+                continue
+            else:
+                break
         if menu_choice == "4":
-            find_by_pattern()
+            flow_control = find_by_pattern()
+            if flow_control == 'search':
+                continue
+            else:
+                break
         if menu_choice == "5":
             clear()
             break
