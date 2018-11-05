@@ -45,6 +45,7 @@ class Task():
         with open('tasks.csv', 'a') as csvfile:
             csvfile.write(self.task_date + ',' + self.name + ',' + self.minutes + ',' + self.notes + '\n')
 
+
 class DisplayEntries():
     def __init__(self, filename):
         self.filename = filename
