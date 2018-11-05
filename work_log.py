@@ -25,11 +25,11 @@ def find_by_date():
     classes.DisplayEntries('tasks.csv').FindByDate(date_search)
     menu_options = ['Return to Search']
     menu_choice = display_menu(status_message, menu_options, False)
-    if menu_choice == 1:
-        search_menu()
-    elif menu_choice == 2:
-        top_menu()
-    elif menu_choice == 3:
+    if menu_choice == '1':
+        return 'search'
+    elif menu_choice == '2':
+        return 'main'
+    elif menu_choice == '3':
         clear()
         quit()
 
@@ -41,11 +41,11 @@ def find_by_time():
     classes.DisplayEntries('tasks.csv').FindByTime(time_search)
     menu_options = ['Return to Search']
     menu_choice = display_menu(status_message, menu_options, False)
-    if menu_choice == 1:
-        search_menu()
-    elif menu_choice == 2:
-        top_menu()
-    elif menu_choice == 3:
+    if menu_choice == '1':
+        return 'search'
+    elif menu_choice == '2':
+        return 'main'
+    elif menu_choice == '3':
         clear()
         quit()
 
@@ -57,11 +57,11 @@ def find_by_exact():
     classes.DisplayEntries('tasks.csv').FindByExact(exact_search)
     menu_options = ['Return to Search']
     menu_choice = display_menu(status_message, menu_options, False)
-    if menu_choice == 1:
-        search_menu()
-    elif menu_choice == 2:
-        top_menu()
-    elif menu_choice == 3:
+    if menu_choice == '1':
+        return 'search'
+    elif menu_choice == '2':
+        return 'main'
+    elif menu_choice == '3':
         clear()
         quit()
 
