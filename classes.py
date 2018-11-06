@@ -200,6 +200,7 @@ class DisplayEntries():
                 print('-' * (col1_width + col2_width + col3_width + col4_width + 4))
                 csvfile.seek(0)
                 count = 0
+                regex_search = re.compile(regex_search)
                 for row in reader:
                     for item in row:
                         if regex_search.fullmatch(item):
@@ -209,6 +210,7 @@ class DisplayEntries():
                             print(row[1] + ' ' * (col2_width - len(row[1])), end="")
                             print(row[2] + ' ' * (col3_width - len(row[2])), end="")
                             print(row[3])
+                            break
                 if count == 1:
                     print('\n\n 1 entry found.')
                 else:

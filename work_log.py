@@ -48,16 +48,16 @@ def top_menu(status_message):
         while len(task_name) > 40:
             header('Add a Task')
             task_name = input('\n I\'m sorry your task name is too long. Try again. ')
-            time_spent = input(' How many minutes were spent on this task? ')
-            while int(time_spent) not in range(100):
-                header('Add a Task')
-                time_spent = input(' Minutes spent must be less than 100. Try again. ')
-                print('-----------(Optional)-----------')
-                notes = input(' Enter any notes. ')
-                task = classes.Task(task_date, task_name, time_spent, notes)
-                task.write_to_file()
-                clear()
-                return "New entry was added successfully!"
+        time_spent = input(' How many minutes were spent on this task? ')
+        while int(time_spent) not in range(100):
+            header('Add a Task')
+            time_spent = input(' Minutes spent must be less than 100. Try again. ')
+        print('-----------(Optional)-----------')
+        notes = input(' Enter any notes. ')
+        task = classes.Task(task_date, task_name, time_spent, notes)
+        task.write_to_file()
+        clear()
+        return "New entry was added successfully!"
 
 
     # Run the search menu if user selects it from the main menu.
@@ -73,7 +73,7 @@ def top_menu(status_message):
                 menu_options = ['Return to Search']
                 menu_choice = display_menu(status_message, menu_options, False)
                 if menu_choice == '1':
-                    break
+                    return 'search'
                 elif menu_choice == '2':
                     return 'main'
                 elif menu_choice == '3':
@@ -123,28 +123,28 @@ def top_menu(status_message):
 
         # Run the 'find by pattern' function if user selects it from the search menu.
         def find_by_pattern():
-            status_message = None
-            header('Find by Pattern')
             while True:
+                status_message = None
+                header('Find by Pattern')
                 regex_search = input('\n Enter a regex pattern to search. ')
                 try:
                     classes.DisplayEntries('tasks.csv').FindByPattern(regex_search)
-                    continue
                 except:
                     pass
 
-                    while True:
-                        menu_options = ['Return to Search']
-                        menu_choice = display_menu(status_message, menu_options, False)
-                        if menu_choice == '1':
-                            return 'search'
-                        elif menu_choice == '2':
-                            return 'main'
-                        elif menu_choice == '3':
-                            clear()
-                            quit()
-                        else:
-                            status_message = 'I\'m sorry that\'s not a valid option'
+                menu_options = ['Return to Search']
+                menu_choice = display_menu(status_message, menu_options, False)
+                if menu_choice == '1':
+                    return 'search'
+                elif menu_choice == '2':
+                    return 'main'
+                elif menu_choice == '3':
+                    clear()
+                    quit()
+                else:
+                    status_message = 'I\'m sorry that\'s not a valid option'
+
+
         status_message = None
         while True:
             header('Search Entries')
