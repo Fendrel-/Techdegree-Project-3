@@ -79,9 +79,9 @@ class DisplayEntries():
                     print('\n\n 1 entry found.')
                 else:
                     print('\n\n {} entries found.'.format(count))
-            return True
+            return count
         except (IndexError, ValueError):
-            return False
+            return 0
 
     def FindByDate(self, date_search):
         try:

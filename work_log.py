@@ -1,4 +1,4 @@
-import pdb
+import csv
 import datetime
 import os
 import re
@@ -22,25 +22,42 @@ def top_menu(status_message):
 
     # Run the 'display entries' function if user selects it from the main menu.
     def display_entries():
-        def edit_entry():
+        def edit_entry(total_entries):
             header('Edit an Entry')
-            has_entries = classes.DisplayEntries('tasks.csv').ShowAll()
-            item_number = input('\n Select an item number to edit ')
+            classes.DisplayEntries('tasks.csv').ShowAll()
+            entry_number = int(input('\n Select an entry number to edit: ')) - 1
+            entry_list = []
+            with open('tasks.csv', newline='') as csvfile:
+                reader = csv.reader(csvfile)
+                for row in reader:
+                    entry_list.append(row)
+            clear()
+            header('Edit an Entry')
+            print('\n [1]   Date:         {} '.format(entry_list[entry_number][0]))
+            print(' [2]   Task Name:    {} '.format(entry_list[entry_number][1]))
+            print(' [3]   Time Spent:   {} '.format(entry_list[entry_number][2]))
+            print(' [4]   Notes:        {} '.format(entry_list[entry_number][3]))
+            item_number = input('\n Select an item number to edit: ')
+
+
+
+        def delete_entry(total_entries):
+            pass
 
 
         status_message = None
         while True:
             header('All Entries')
-            has_entries = classes.DisplayEntries('tasks.csv').ShowAll()
-            if not has_entries:
+            total_entries = classes.DisplayEntries('tasks.csv').ShowAll()
+            if total_entries == 0:
                 status_message = 'You don\'t have any entries yet!'
             menu_options = ['Edit an Entry', 'Delete an Entry']
             menu_choice = display_menu(status_message, menu_options, False)
             if menu_choice == "1":
-                edit_entry()
+                edit_entry(total_entries)
             elif menu_choice == "2":
-                pass
-            if menu_choice == "3":
+                delete_entry()
+            elif menu_choice == "3":
                 break
             elif menu_choice == "4":
                 clear()
