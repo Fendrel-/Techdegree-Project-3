@@ -22,6 +22,12 @@ def top_menu(status_message):
 
     # Run the 'display entries' function if user selects it from the main menu.
     def display_entries():
+        def edit_entry():
+            header('Edit an Entry')
+            has_entries = classes.DisplayEntries('tasks.csv').ShowAll()
+            item_number = input('\n Select an item number to edit ')
+
+
         status_message = None
         while True:
             header('All Entries')
@@ -30,6 +36,10 @@ def top_menu(status_message):
                 status_message = 'You don\'t have any entries yet!'
             menu_options = ['Edit an Entry', 'Delete an Entry']
             menu_choice = display_menu(status_message, menu_options, False)
+            if menu_choice == "1":
+                edit_entry()
+            elif menu_choice == "2":
+                pass
             if menu_choice == "3":
                 break
             elif menu_choice == "4":
@@ -44,25 +54,29 @@ def top_menu(status_message):
         header('Add a Task')
         while True:
             try:
-                task_date = datetime.datetime.strptime(input('\n Enter task date as MM/DD/YYYY '), '%m/%d/%Y')
+                task_date = datetime.datetime.strptime(input('\n Enter task date as MM/DD/YYYY: '), '%m/%d/%Y')
                 task_date = task_date.strftime('%m/%d/%Y')
                 break
             except ValueError:
                 header('Add a Task')
                 print('\n Please enter a valid date.')
-        task_name = input('\n What is the task name? ')
+        task_name = input('\n What is the task name?: ')
         while len(task_name) > 40:
             header('Add a Task')
-            print('\n Enter task date as MM/DD/YYYY {}'.format(task_date))
-            task_name = input('\n I\'m sorry your task name is too long. Try again. ')
-        time_spent = input('\n How many minutes were spent on this task? ')
-        while int(time_spent) not in range(1000):
+            print('\n Enter task date as MM/DD/YYYY: {}'.format(task_date))
+            task_name = input('\n I\'m sorry your task name is too long. Try again: ')
+        try:
+            time_spent = input('\n How many minutes were spent on this task?: ')
+            if int(time_spent) > 999:
+                raise ValueError
+        except ValueError:
             header('Add a Task')
-            print('\n Enter task date as MM/DD/YYYY {}'.format(task_date))
-            print('\n What is the task name? {}'.format(task_name))
-            time_spent = input('\n Minutes spent must be less than 1,000. Try again. ')
+            print('\n Enter task date as MM/DD/YYYY: {}'.format(task_date))
+            print('\n What is the task name?: {}'.format(task_name))
+            time_spent = input('\n Minutes spent must be an integer less than 1,000. Try again: ')
+
         print('\n-----------(Optional)-----------')
-        notes = input(' Enter any notes. ')
+        notes = input(' Enter any notes: ')
         task = classes.Task(task_date, task_name, time_spent, notes)
         task.write_to_file()
         clear()
@@ -78,7 +92,7 @@ def top_menu(status_message):
             header('Find by Date')
             while True:
                 try:
-                    date_search = datetime.datetime.strptime(input('\n Enter a date with format MM/DD/YYYY '), '%m/%d/%Y')
+                    date_search = datetime.datetime.strptime(input('\n Enter a date with format MM/DD/YYYY: '), '%m/%d/%Y')
                     classes.DisplayEntries('tasks.csv').FindByDate(date_search)
                     while True:
                         menu_options = ['Return to Search']
@@ -101,7 +115,7 @@ def top_menu(status_message):
         # Run the 'find by time spent' function if user selects it from the search menu.
         def find_by_time():
             header('Find by Time')
-            time_search = input('\n Enter a number of minutes to search for ')
+            time_search = input('\n Enter a number of minutes to search for: ')
             status_message = None
             classes.DisplayEntries('tasks.csv').FindByTime(time_search)
             while True:
@@ -122,7 +136,7 @@ def top_menu(status_message):
         # Run the 'find by exact match' function if user selects it from the search menu.
         def find_by_exact():
             header('Find by Exact Name')
-            exact_search = input('\n Enter the task name to search for. ').lower()
+            exact_search = input('\n Enter the task name to search for: ').lower()
             status_message = None
             classes.DisplayEntries('tasks.csv').FindByExact(exact_search)
             menu_options = ['Return to Search']
@@ -137,15 +151,14 @@ def top_menu(status_message):
 
         # Run the 'find by pattern' function if user selects it from the search menu.
         def find_by_pattern():
+            status_message = None
+            header('Find by Pattern')
             while True:
-                status_message = None
-                header('Find by Pattern')
-                regex_search = input('\n Enter a regex pattern to search. ')
+                regex_search = input('\n Enter a regex pattern to search: ')
                 try:
                     classes.DisplayEntries('tasks.csv').FindByPattern(regex_search)
                 except:
                     pass
-
                 menu_options = ['Return to Search']
                 menu_choice = display_menu(status_message, menu_options, False)
                 if menu_choice == '1':
@@ -156,7 +169,7 @@ def top_menu(status_message):
                     clear()
                     quit()
                 else:
-                    status_message = 'I\'m sorry that\'s not a valid option'
+                    print('I\'m sorry that\'s not a valid option')
 
 
         status_message = None
@@ -197,7 +210,7 @@ def top_menu(status_message):
                 break
             elif menu_choice == "6":
                 clear()
-                quit()
+                break
             else:
                 status_message = 'I\'m sorry that\'s not a valid option'
 
