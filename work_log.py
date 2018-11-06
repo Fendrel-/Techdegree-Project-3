@@ -28,11 +28,11 @@ def top_menu(status_message):
             has_entries = classes.DisplayEntries('tasks.csv').ShowAll()
             if not has_entries:
                 status_message = 'You don\'t have any entries yet!'
-            menu_options = []
+            menu_options = ['Edit an Entry', 'Delete an Entry']
             menu_choice = display_menu(status_message, menu_options, False)
-            if menu_choice == "1":
+            if menu_choice == "3":
                 break
-            elif menu_choice == "2":
+            elif menu_choice == "4":
                 clear()
                 quit()
             else:
@@ -42,17 +42,26 @@ def top_menu(status_message):
     # Run the 'add entry' function if user selects it from the main menu.
     def add_entry():
         header('Add a Task')
-        task_date = datetime.datetime.strptime(input('\n Enter task date as MM/DD/YYYY '), '%m/%d/%Y')
-        task_date = task_date.strftime('%m/%d/%Y')
-        task_name = input(' What is the task name? ')
+        while True:
+            try:
+                task_date = datetime.datetime.strptime(input('\n Enter task date as MM/DD/YYYY '), '%m/%d/%Y')
+                task_date = task_date.strftime('%m/%d/%Y')
+                break
+            except ValueError:
+                header('Add a Task')
+                print('\n Please enter a valid date.')
+        task_name = input('\n What is the task name? ')
         while len(task_name) > 40:
             header('Add a Task')
+            print('\n Enter task date as MM/DD/YYYY {}'.format(task_date))
             task_name = input('\n I\'m sorry your task name is too long. Try again. ')
-        time_spent = input(' How many minutes were spent on this task? ')
-        while int(time_spent) not in range(100):
+        time_spent = input('\n How many minutes were spent on this task? ')
+        while int(time_spent) not in range(1000):
             header('Add a Task')
-            time_spent = input(' Minutes spent must be less than 100. Try again. ')
-        print('-----------(Optional)-----------')
+            print('\n Enter task date as MM/DD/YYYY {}'.format(task_date))
+            print('\n What is the task name? {}'.format(task_name))
+            time_spent = input('\n Minutes spent must be less than 1,000. Try again. ')
+        print('\n-----------(Optional)-----------')
         notes = input(' Enter any notes. ')
         task = classes.Task(task_date, task_name, time_spent, notes)
         task.write_to_file()
@@ -67,21 +76,26 @@ def top_menu(status_message):
             fmt = '%m/%d/%Y'
             status_message = None
             header('Find by Date')
-            date_search = datetime.datetime.strptime(input('\n Enter a date with format MM/DD/YYYY '), '%m/%d/%Y')
-            classes.DisplayEntries('tasks.csv').FindByDate(date_search)
             while True:
-                menu_options = ['Return to Search']
-                menu_choice = display_menu(status_message, menu_options, False)
-                if menu_choice == '1':
-                    return 'search'
-                elif menu_choice == '2':
-                    return 'main'
-                elif menu_choice == '3':
-                    clear()
-                    quit()
-                else:
-                    status_message = 'I\'m sorry that\'s not a valid option'
+                try:
+                    date_search = datetime.datetime.strptime(input('\n Enter a date with format MM/DD/YYYY '), '%m/%d/%Y')
+                    classes.DisplayEntries('tasks.csv').FindByDate(date_search)
+                    while True:
+                        menu_options = ['Return to Search']
+                        menu_choice = display_menu(status_message, menu_options, False)
+                        if menu_choice == '1':
+                            return 'search'
+                        elif menu_choice == '2':
+                            return 'main'
+                        elif menu_choice == '3':
+                            clear()
+                            quit()
+                        else:
+                            status_message = 'I\'m sorry that\'s not a valid option'
+                            header('Find by Date')
+                except ValueError:
                     header('Find by Date')
+                    print('\n Please enter a valid date.')
 
 
         # Run the 'find by time spent' function if user selects it from the search menu.

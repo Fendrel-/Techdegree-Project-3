@@ -66,7 +66,6 @@ class DisplayEntries():
                 print('Notes', end="")
                 print('\n ', end="")
                 print('-' * (col1_width + col2_width + col3_width + col4_width + 4))
-
                 csvfile.seek(0)
                 count = 0
                 for row in reader:
