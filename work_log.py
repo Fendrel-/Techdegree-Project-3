@@ -21,42 +21,91 @@ def top_menu(status_message):
         return input('\n Choose an option: ')
 
     # Run the 'display entries' function if user selects it from the main menu.
-    def display_entries():
+    def modify_entries():
         def edit_entry(total_entries):
-            header('Edit an Entry')
-            classes.DisplayEntries('tasks.csv').ShowAll()
-            entry_number = int(input('\n Select an entry number to edit: ')) - 1
-            entry_list = []
-            with open('tasks.csv', newline='') as csvfile:
-                reader = csv.reader(csvfile)
-                for row in reader:
-                    entry_list.append(row)
-            clear()
-            header('Edit an Entry')
-            print('\n [1]   Date:         {} '.format(entry_list[entry_number][0]))
-            print(' [2]   Task Name:    {} '.format(entry_list[entry_number][1]))
-            print(' [3]   Time Spent:   {} '.format(entry_list[entry_number][2]))
-            print(' [4]   Notes:        {} '.format(entry_list[entry_number][3]))
-            item_number = input('\n Select an item number to edit: ')
+            while True:
+                header('Edit an Entry')
+                classes.DisplayEntries('tasks.csv').ShowAll()
+                entry_number = int(input('\n Select an entry number to edit: ')) - 1
+                entry_list = []
+                with open('tasks.csv', newline='') as csvfile:
+                    reader = csv.reader(csvfile)
+                    for row in reader:
+                        entry_list.append(row)
 
+                clear()
+                header('Edit an Entry')
+                print('\n [1]   Date:         {} '.format(entry_list[entry_number][0]))
+                print(' [2]   Task Name:    {} '.format(entry_list[entry_number][1]))
+                print(' [3]   Time Spent:   {} '.format(entry_list[entry_number][2]))
+                print(' [4]   Notes:        {} '.format(entry_list[entry_number][3]))
+                item_number = int(input('\n Select an item to edit: ')) - 1
+                if item_number == 0:
+                    try:
+                        task_date = datetime.datetime.strptime(input('\n Enter task date as MM/DD/YYYY: '), '%m/%d/%Y')
+                        entry_list[entry_number][0] = task_date.strftime('%m/%d/%Y')
+                    except ValueError:
+                        header('Add a Task')
+                        print('\n Please enter a valid date.')
+                elif item_number == 1:
+                    task_name = input('\n What is the task name?: ')
+                    entry_list[entry_number][1] = task_name
+                    while len(task_name) > 40:
+                        header('Edit an Entry')
+                        task_name = input('\n I\'m sorry your task name is too long. Try again: ')
+                        entry_list[entry_number][1] = task_name
+                elif item_number == 2:
+                    try:
+                        time_spent = input('\n How many minutes were spent on this task?: ')
+                        entry_list[entry_number][2] = int(time_spent)
+                        if int(time_spent) > 999:
+                            raise ValueError
+                    except:
+                        pass
 
+                elif item_number == 3:
+                    notes = input(' Enter any notes: ')
+                    entry_list[entry_number][3] = notes
+                    clear()
+
+                with open('tasks.csv', 'w', newline='') as csvfile:
+                    for entry in entry_list:
+                        csvfile.write(entry[0]+','+entry[1]+','+entry[2]+','+entry[3])
+                        csvfile.write('\n')
+                break
 
         def delete_entry(total_entries):
-            pass
-
+            header('Delete an Entry')
+            classes.DisplayEntries('tasks.csv').ShowAll()
+            entry_number = int(input('\n Select an entry to delete: ')) - 1
+            confirm = input('\n Are you sure you want to delete? (Y)es or (N)o: ')
+            if confirm[0].upper() == 'Y':
+                entry_list = []
+                with open('tasks.csv', newline='') as csvfile:
+                    reader = csv.reader(csvfile)
+                    for row in reader:
+                        entry_list.append(row)
+                del entry_list[entry_number]
+                with open('tasks.csv', 'w', newline='') as csvfile:
+                    for entry in entry_list:
+                        for item in entry:
+                            csvfile.write(item + ',')
+                        csvfile.write('\n')
+            else:
+                pass
 
         status_message = None
         while True:
             header('All Entries')
             total_entries = classes.DisplayEntries('tasks.csv').ShowAll()
             if total_entries == 0:
-                status_message = 'You don\'t have any entries yet!'
+                status_message = 'You don\'t have any entries added!'
             menu_options = ['Edit an Entry', 'Delete an Entry']
             menu_choice = display_menu(status_message, menu_options, False)
             if menu_choice == "1":
                 edit_entry(total_entries)
             elif menu_choice == "2":
-                delete_entry()
+                delete_entry(total_entries)
             elif menu_choice == "3":
                 break
             elif menu_choice == "4":
@@ -245,7 +294,7 @@ def top_menu(status_message):
 
     while True:
         header('Work Log')
-        menu_options = ['Add New Entry', 'Show All Entries', 'Search Entries']
+        menu_options = ['Add New Entry', 'Modify Entries', 'Search Entries']
         menu_choice = display_menu(
             status_message,
             menu_options,
@@ -254,7 +303,7 @@ def top_menu(status_message):
             status_message = add_entry()
             continue
         elif menu_choice == "2":
-            status_message = display_entries()
+            status_message = modify_entries()
         elif menu_choice == "3":
             status_message = search_menu()
         elif menu_choice == "4":
