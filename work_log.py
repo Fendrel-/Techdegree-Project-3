@@ -22,6 +22,7 @@ def top_menu(status_message):
 
     # Run the 'display entries' function if user selects it from the main menu.
     def modify_entries():
+        has_entries = classes.DisplayEntries('tasks.csv').ShowAll()
         def edit_entry(total_entries):
             while True:
                 header('Edit an Entry')
@@ -61,7 +62,7 @@ def top_menu(status_message):
                         if int(time_spent) > 999:
                             raise ValueError
                     except:
-                        pass
+                        return 'Minutes spent must be an integer less that 1,000.'
 
                 elif item_number == 3:
                     notes = input(' Enter any notes: ')
@@ -70,7 +71,7 @@ def top_menu(status_message):
 
                 with open('tasks.csv', 'w', newline='') as csvfile:
                     for entry in entry_list:
-                        csvfile.write(entry[0]+','+entry[1]+','+entry[2]+','+entry[3])
+                        csvfile.write(entry[0]+','+entry[1]+','+str(entry[2])+','+entry[3])
                         csvfile.write('\n')
                 break
 
@@ -79,23 +80,27 @@ def top_menu(status_message):
             classes.DisplayEntries('tasks.csv').ShowAll()
             entry_number = int(input('\n Select an entry to delete: ')) - 1
             confirm = input('\n Are you sure you want to delete? (Y)es or (N)o: ')
-            if confirm[0].upper() == 'Y':
-                entry_list = []
-                with open('tasks.csv', newline='') as csvfile:
-                    reader = csv.reader(csvfile)
-                    for row in reader:
-                        entry_list.append(row)
-                del entry_list[entry_number]
-                with open('tasks.csv', 'w', newline='') as csvfile:
-                    for entry in entry_list:
-                        for item in entry:
-                            csvfile.write(item + ',')
-                        csvfile.write('\n')
-            else:
-                pass
+            try:
+                if confirm[0].upper() == 'Y':
+                    entry_list = []
+                    with open('tasks.csv', newline='') as csvfile:
+                        reader = csv.reader(csvfile)
+                        for row in reader:
+                            entry_list.append(row)
+                    del entry_list[entry_number]
+                    with open('tasks.csv', 'w', newline='') as csvfile:
+                        for entry in entry_list:
+                            for item in entry:
+                                csvfile.write(item + ',')
+                            csvfile.write('\n')
+                else:
+                    pass
+            except IndexError:
+                return 'Invalid selection.'
+
 
         status_message = None
-        while True:
+        if has_entries:
             header('All Entries')
             total_entries = classes.DisplayEntries('tasks.csv').ShowAll()
             if total_entries == 0:
@@ -107,12 +112,14 @@ def top_menu(status_message):
             elif menu_choice == "2":
                 delete_entry(total_entries)
             elif menu_choice == "3":
-                break
+                pass
             elif menu_choice == "4":
                 clear()
                 quit()
             else:
                 status_message = '\n I\'m sorry that\'s not a valid option'
+        else:
+            return 'You don\'t have any entries added!'
 
 
     # Run the 'add entry' function if user selects it from the main menu.
@@ -139,7 +146,8 @@ def top_menu(status_message):
             header('Add a Task')
             print('\n Enter task date as MM/DD/YYYY: {}'.format(task_date))
             print('\n What is the task name?: {}'.format(task_name))
-            time_spent = input('\n Minutes spent must be an integer less than 1,000. Try again: ')
+            return '\n Minutes spent must be an integer less than 1,000. Try again: '
+
 
         print('\n-----------(Optional)-----------')
         notes = input(' Enter any notes: ')
